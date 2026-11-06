@@ -1,0 +1,24 @@
+# Generated for {{ inventory_hostname }} ({{ ansible_host }})
+worker_processes {{ nginx_worker_processes }};
+error_log {{ nginx_error_log }};
+pid /tmp/nginx.pid;
+
+events {
+    worker_connections {{ nginx_worker_connections }};
+}
+
+http {
+    default_type application/octet-stream;
+    access_log {{ nginx_access_log }};
+    sendfile on;
+
+    server {
+        listen {{ nginx_listen_port }};
+        server_name {{ nginx_server_name }};
+        root {{ nginx_document_root }};
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+    }
+}

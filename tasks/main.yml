@@ -1,0 +1,20 @@
+---
+- name: Validate target address and configuration
+  ansible.builtin.assert:
+    that:
+      - ansible_host | ansible.utils.ipaddr('address')
+      - nginx_listen_port | int > 0
+      - nginx_listen_port | int < 65536
+      - nginx_worker_connections | int > 0
+
+- name: Create a separate local artifact directory for each host
+  ansible.builtin.file:
+    path: "{{ nginx_artifact_root }}/{{ inventory_hostname }}"
+    state: directory
+    mode: '0755'
+
+- name: Render local Nginx configuration
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_artifact_root }}/{{ inventory_hostname }}/nginx.conf"
+    mode: '0644'
