@@ -2,7 +2,7 @@
 - name: Validate target address and configuration
   ansible.builtin.assert:
     that:
-      - ansible_host | ansible.utils.ipaddr('address')
+      - (ansible_host | ansible.utils.ipaddr('address')) != false
       - nginx_listen_port | int > 0
       - nginx_listen_port | int < 65536
       - nginx_worker_connections | int > 0
